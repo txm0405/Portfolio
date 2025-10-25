@@ -1,8 +1,52 @@
-import { Mail, Github, Phone } from "lucide-react";
+import { Mail, Github, Phone, Coffee, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import discordImg from "@/assets/discord.webp";
 import whatsappImg from "@/assets/whatsapp.webp";
 const Contact = () => {
+  const { toast } = useToast();
+  const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
+
+  const cryptoAddresses = [
+    {
+      name: "Bitcoin",
+      symbol: "BTC",
+      address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+      color: "text-orange-500"
+    },
+    {
+      name: "Ethereum",
+      symbol: "ETH",
+      address: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb4",
+      color: "text-blue-500"
+    },
+    {
+      name: "Solana",
+      symbol: "SOL",
+      address: "DYw8jCTfwHNRJhhmFcbXvVDTqWMEVFBX6ZKUmG5CDSXK",
+      color: "text-purple-500"
+    }
+  ];
+
+  const copyToClipboard = async (address: string, name: string) => {
+    try {
+      await navigator.clipboard.writeText(address);
+      setCopiedAddress(address);
+      toast({
+        title: "Adresse kopiert!",
+        description: `${name} Adresse wurde in die Zwischenablage kopiert.`,
+      });
+      setTimeout(() => setCopiedAddress(null), 2000);
+    } catch (err) {
+      toast({
+        title: "Fehler",
+        description: "Adresse konnte nicht kopiert werden.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const socialLinks = [
     { 
       icon: Github, 
@@ -83,6 +127,36 @@ const Contact = () => {
               E-Mail senden
             </a>
           </Button>
+
+          <div className="mt-16 pt-16 border-t border-border/30">
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <Coffee className="w-6 h-6 text-primary" aria-hidden="true" />
+              <h3 className="text-2xl font-semibold">Spendier mir einen Kaffee</h3>
+            </div>
+            <p className="text-muted-foreground mb-6">
+              Unterstütze meine Arbeit mit einer kleinen Krypto-Spende
+            </p>
+            <div className="flex justify-center gap-3 flex-wrap">
+              {cryptoAddresses.map((crypto, index) => (
+                <Button
+                  key={crypto.symbol}
+                  variant="outline"
+                  size="lg"
+                  onClick={() => copyToClipboard(crypto.address, crypto.name)}
+                  className="border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all animate-scale-in"
+                  style={{ animationDelay: `${(socialLinks.length + index) * 0.1}s` }}
+                  aria-label={`${crypto.name} Adresse kopieren`}
+                >
+                  <span className={`font-semibold ${crypto.color} mr-2`}>{crypto.symbol}</span>
+                  {copiedAddress === crypto.address ? (
+                    <Check className="w-4 h-4 text-green-500" aria-hidden="true" />
+                  ) : (
+                    <Copy className="w-4 h-4" aria-hidden="true" />
+                  )}
+                </Button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
