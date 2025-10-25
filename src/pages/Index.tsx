@@ -5,6 +5,7 @@ import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import DiscordPresence from "@/components/DiscordPresence";
 import Contact from "@/components/Contact";
+import BuyMeACoffee from "@/components/BuyMeACoffee";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -25,6 +26,7 @@ const Index = () => {
         <About />
         <Projects />
         <Skills />
+        <BuyMeACoffee />
         <Contact />
         <section id="discord" className="py-16 md:py-24 px-4" aria-labelledby="discord-heading">
           <div className="container mx-auto max-w-4xl">
